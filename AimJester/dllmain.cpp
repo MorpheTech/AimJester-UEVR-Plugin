@@ -1,22 +1,18 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
+#include "uevr/Plugin.hpp"
 
 #include <sstream>
 #include <memory>
+#include <iostream>
 
-#include "uevr/Plugin.hpp"
 
 using namespace uevr;
 using namespace std;
 
-// int main() {
-//     vector<string> msg {"Hello", "C++", "World", "from", "VS Code", "and the C++ extension!"};
-
-//     for (const string& word : msg) {
-//         cout << word << " ";
-//     }
-//     cout << endl;
-// }
+// TODO - Create a symbolic link
+//      - Figure out how to run code on loop
+//      - Figure out how to pull tracked device pose data
 
 #define PLUGIN_LOG_ONCE(...) \
     static bool _logged_ = false; \
@@ -28,6 +24,7 @@ using namespace std;
 class AimJester : public uevr::Plugin {
 public:
     AimJester() = default;
+    int a = 0;
 
     void on_dllmain() override {}
 
@@ -36,6 +33,9 @@ public:
         API::get()->log_warn("%s %s", "INITIALZING AIM JESTER PLUGIN", "warning");
         API::get()->log_info("%s %s", "INITIALZING AIM JESTER PLUGIN", "info");
         SetCursorPos(0, 0);
+ 
+        UEVR_PluginInitializeParam uevr_plugin = UEVR_PluginInitializeParam();
+        // uevr.vr->get_pose();
     }
 
     void on_pre_engine_tick(UEVR_UGameEngineHandle engine, float delta) override {
