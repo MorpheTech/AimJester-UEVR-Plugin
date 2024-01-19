@@ -1,3 +1,11 @@
 
 *.vsidx
 .vs/
+*.obj
+*.tlog
+*.iobj
+*.pdb
+*.ipdb
+*.log
+*.pch
+*.recipe
