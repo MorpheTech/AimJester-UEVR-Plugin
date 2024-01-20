@@ -10,11 +10,7 @@ using namespace uevr;
 
 /*
   TODO:
-    - hook up a symbolic link so my plugin can reload/hotswap while the game is running
-mklink "C:\Users\jakem\AppData\Roaming\UnrealVRMod\HogwartsLegacy\plugins\AimJester.dll" "C:\Users\jakem\Documents\GitHub\AimJester-UEVR-Plugin\x64\Release\AimJester.dll"
-    - get cursor to move in  Non-VR
-SetCursorPos(0, 0);
-    - get rotation/direction VRdata from tracked device
+    - mklink "C:\Users\jakem\AppData\Roaming\UnrealVRMod\HogwartsLegacy\plugins\AimJester.dll" "C:\Users\jakem\Documents\GitHub\AimJester-UEVR-Plugin\x64\Release\AimJester.dll"
     - get cursor to move in that on_pre_engine_tick callback (VR)
     - see if we can manipulate wand aiming at all with VRData
 */
