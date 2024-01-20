@@ -7,7 +7,6 @@
 
 
 using namespace uevr;
-using namespace std;
 
 /*
   TODO:
@@ -44,27 +43,15 @@ public:
         API::get()->log_error("%s %s", "INITIALZING AIM JESTER PLUGIN", "error");
         API::get()->log_warn("%s %s", "INITIALZING AIM JESTER PLUGIN", "warning");
         API::get()->log_info("%s %s", "INITIALZING AIM JESTER PLUGIN", "info");
-        SetCursorPos(-500, 0);
-
-        for (int i = 0; i < 200; i++) {
-            SetCursorPos(a, a);
-            a += 10;
-        }
-        API::get()->log_info("Finished moving cursor | a = %i pos for cursor", a);
-
-        uevr_plugin = UEVR_PluginInitializeParam();
+        uevr_plugin = *API::get()->param();
     }
 
     void on_pre_engine_tick(UEVR_UGameEngineHandle engine, float delta) override {
         PLUGIN_LOG_ONCE("Pre Engine Tick: %f", delta);
-        API::get()->log_info("MADE IT 1");
         hmd_index = uevr_plugin.vr->get_hmd_index();
-        API::get()->log_info("MADE IT 2");
         rc_index = uevr_plugin.vr->get_right_controller_index();
         lc_index = uevr_plugin.vr->get_left_controller_index();
         uevr_plugin.vr->get_pose(rc_index, &pos, &rot);
-        API::get()->log_info("MADE IT 4");
-        SetCursorPos(rot.x, rot.y);
         API::get()->log_info("on_pre_engine_tick JESTER (%f, %f)", rot.x, rot.y);
     }
 
