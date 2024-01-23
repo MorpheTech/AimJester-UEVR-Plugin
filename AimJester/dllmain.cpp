@@ -1,16 +1,18 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
+#include "Rat.hpp"
 #include "uevr/Plugin.hpp"
 
-#include <sstream>
 #include <memory>
 
 
 using namespace uevr;
+using namespace rat;
 
 /*
   TODO:
-    - mklink "C:\Users\jakem\AppData\Roaming\UnrealVRMod\HogwartsLegacy\plugins\AimJester.dll" "C:\Users\jakem\Documents\GitHub\AimJester-UEVR-Plugin\x64\Release\AimJester.dll"
+    - mklink "C:\Users\jakem\AppData\Roaming\UnrealVRMod\HogwartsLegacy\plugins\AimJester.dll" "C:\Users\jakem\Documents\GitHub\AimJester-UEVR-Plugin\AimJester\x64\Release\AimJester.dll"
+    - get cursor to move in that on_pre_engine_tick callback (Non-VR)
     - get cursor to move in that on_pre_engine_tick callback (VR)
     - see if we can manipulate wand aiming at all with VRData
 */
@@ -36,10 +38,9 @@ public:
     void on_dllmain() override {}
 
     void on_initialize() override {
-        API::get()->log_error("%s %s", "INITIALZING AIM JESTER PLUGIN", "error");
-        API::get()->log_warn("%s %s", "INITIALZING AIM JESTER PLUGIN", "warning");
         API::get()->log_info("%s %s", "INITIALZING AIM JESTER PLUGIN", "info");
         uevr_plugin = *API::get()->param();
+        Rat::send_mouse_input(150, 150);
     }
 
     void on_pre_engine_tick(UEVR_UGameEngineHandle engine, float delta) override {
@@ -47,8 +48,9 @@ public:
         hmd_index = uevr_plugin.vr->get_hmd_index();
         rc_index = uevr_plugin.vr->get_right_controller_index();
         lc_index = uevr_plugin.vr->get_left_controller_index();
-        uevr_plugin.vr->get_pose(rc_index, &pos, &rot);
-        API::get()->log_info("on_pre_engine_tick JESTER (%f, %f)", rot.x, rot.y);
+        uevr_plugin.vr->get_pose(hmd_index, &pos, &rot);
+        API::get()->log_info("on_pre_engine_tick JESTER (%f, %f)", rot.x*10, rot.y*10);
+        Rat::send_mouse_input(2, 2);
     }
 
     void on_post_engine_tick(UEVR_UGameEngineHandle engine, float delta) override {
