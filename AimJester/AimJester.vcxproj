@@ -142,7 +142,6 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Rat.hpp" />
     <ClInclude Include="uevr\API.h" />
     <ClInclude Include="uevr\API.hpp" />
     <ClInclude Include="uevr\Plugin.hpp" />
