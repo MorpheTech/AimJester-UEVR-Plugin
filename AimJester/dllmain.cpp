@@ -1,6 +1,7 @@
 // dllmain.cpp : Defines the entry point for the DLL application.
 #include "pch.h"
 #include "uevr/Plugin.hpp"
+// #include "hlsdk/_Script_Engine/Pawn.hpp"
 
 #include <memory>
 
@@ -10,10 +11,22 @@ using namespace uevr;
 /*
   TODO:
     - mklink "C:\Users\jakem\AppData\Roaming\UnrealVRMod\HogwartsLegacy\plugins\AimJester.dll" "C:\Users\jakem\Documents\GitHub\AimJester-UEVR-Plugin\AimJester\x64\Release\AimJester.dll"
-    - get cursor to move in that on_pre_engine_tick callback (Non-VR)
-    - get cursor to move in that on_pre_engine_tick callback (VR)
-    - see if we can manipulate wand aiming at all with VRData
+    - Try to find InputComponent#AxisMapping from plugin
 */
+
+//template <typename T>
+//T* DCast(UObject* In) {
+//    if (In == nullptr) {
+//        return nullptr;
+//    }
+//
+//    //API::get()->log_info("Comparing %s and %s", get_full_name(In).c_str(), get_full_name(T::StaticClass()).c_str());
+//
+//    if (((UObjectBase*)In)->IsA(T::StaticClass())) {
+//        return (T*)In;
+//    }
+//    return nullptr;
+//}
 
 #define PLUGIN_LOG_ONCE(...) \
     static bool _logged_ = false; \
@@ -40,9 +53,12 @@ public:
     void on_initialize() override {
         API::get()->log_info("%s %s", "INITIALZING AIM JESTER PLUGIN", "info");
         uevr_plugin = *API::get()->param();
-        send_mouse_input(100, 100);
+        for (int i = 200; i < 700; i++) {
+            send_mouse_input(i, i);
+        }
         prev_pos->x = 0.0f; prev_pos->y = 0.0f; prev_pos->z = 0.0f;
         prev_rot->w = 0.0f; prev_rot->x = 0.0f; prev_rot->y = 0.0f; prev_rot->z = 0.0f;
+        UEVR_UObjectHandle pc = uevr_plugin.sdk->functions->get_player_controller(0);
     }
 
     void on_pre_engine_tick(UEVR_UGameEngineHandle engine, float delta) override {
@@ -53,12 +69,8 @@ public:
         uevr_plugin.vr->get_pose(hmd_index, &pos, &rot);
         API::get()->log_info("on_pre_engine_tick get_pose (%f, %f)", rot.x, rot.y);
         // API::get()->log_info("on_pre_engine_tick get_pose (%i, %i)", static_cast<int>(rot.x), static_cast<int>(rot.y));
-        // send_mouse_input(static_cast<int>(rot.x * 20), static_cast<int>(rot.y * 20));
+        send_mouse_input(static_cast<int>(rot.x * 20), static_cast<int>(rot.y * 20));
         prev_rot->x = rot.x; prev_rot->y = rot.y;
-    }
-
-    void on_post_engine_tick(UEVR_UGameEngineHandle engine, float delta) override {
-        PLUGIN_LOG_ONCE("Post Engine Tick: %f", delta);
     }
 
     static void send_mouse_input(int x, int y) {
@@ -67,7 +79,7 @@ public:
         inputs[0].type = INPUT_MOUSE;
         inputs[0].mi.dx = x;
         inputs[0].mi.dy = y;
-        inputs[0].mi.dwFlags = MOUSEEVENTF_MOVE;
+        inputs[0].mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
         // API::get()->log_info("on_pre_engine_tick send_mouse_input (%i, %i)", inputs[0].mi.dx, inputs[0].mi.dy);
         SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
     }
